@@ -1,24 +1,32 @@
 const { Router } = require('express');
 const router = Router();
 
-router.get('/', (req, res) => {
-    res.status(200).send('Happy coding!');
+const transactionModel = require('../models/transactions');
+
+router.get('/', async (req, res) => {
+    const transactions = await transactionModel.find().exec();
+    res.status(200).send(transactions);
 })
 
-router.get('/:id', (req, res) => {
-    res.status(200).send(`Happy coding: ${req.params.id}`);
+router.get('/:id', async (req, res) => {
+    const transaction = await transactionModel.findById(req.params.id).exec();
+    res.status(200).send(transaction);
 })
 
-router.post('/', (req, res) => {
-    res.status(201).send(req.body);
+router.post('/', async (req, res) => {
+    console.log(req.body)
+    const transaction = await transactionModel.create(req.body);
+    res.status(201).send(transaction);
 })
 
-router.put('/:id', (req, res) => {
-    res.status(200).send(req.body);
+router.put('/:id', async (req, res) => {
+    const transaction = await transactionModel.findByIdAndUpdate(req.params.id ,req.body);
+    res.status(200).send(transaction);
 })
 
-router.delete('/:id', (req, res) => {
-    res.status(200).send(req.params.id);
+router.delete('/:id', async (req, res) => {
+    const transaction = await transactionModel.findByIdAndDelete(req.params.id);
+    res.status(200).send(transaction);
 })
 
 module.exports = router;
